@@ -25,22 +25,32 @@ def get_dims(cap, res='1080p'):
     change_res(cap, width, height)
     return width, height
 
+#Video Encoding, might require additional installs
+VIDEO_TYPE = {
+    'avi': cv2.VideoWriter_fourcc(*'XVID'),
+    'mp4': cv2.VideoWriter_fourcc(*'XVID'),
+}
+
+def get_video_type(filename):
+    filename, ext = os.path.splittext(filename)
+    if ext in VIDEO_TYPE:
+        return VIDEO_TYPE[ext]
+    return VIDEO_TYPE['avi']
+
 cap = cv2.VideoCapture(0)
-dims = get_dims(cap, res = my_res)
+out = cv2.VideoWriter(filename, get_video_type(filename), 25, get_dims(cap, res))
 
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
-
-    # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    out.write(frame)
    
     # Display the resulting frame
     cv2.imshow('frame',frame)
-    cv2.imshow('gray',gray)
     if cv2.waitKey(20) & 0xFF == ord('q'):
         break
 
 # When everything done, release the capture
 cap.release()
+out.release()
 cv2.destroyAllWindows()
