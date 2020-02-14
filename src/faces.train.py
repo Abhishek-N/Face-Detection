@@ -44,8 +44,8 @@ for root, dirs, files in os.walk(image_dir):
 #print(y_labels)
 #print(x_train)
 
-with open("labels.pickle", 'wb') as f:
+with open("pickles/face-labels.pickle", 'wb') as f:
 	pickle.dump(label_ids, f)
 
 recognizer.train(x_train, np.array(y_labels))
-recognizer.save("recognizers/face-trainner.yml")
+recognizer.write("recognizers/face-trainner.yml")
