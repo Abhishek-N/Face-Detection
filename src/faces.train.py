@@ -29,7 +29,7 @@ for root, dirs, files in os.walk(image_dir):
 			#y_labels.append(label) # some number
 			#x_train.append(path) # verify this image, turn into a NUMPY arrray, GRAY
 			pil_image = Image.open(path).convert("L") # grayscale
-			size = (550, 550)
+			size = (480, 480)
 			final_image = pil_image.resize(size, Image.ANTIALIAS)
 			image_array = np.array(final_image, "uint8")
 			#print(image_array)
@@ -43,9 +43,8 @@ for root, dirs, files in os.walk(image_dir):
 
 #print(y_labels)
 #print(x_train)
-
 with open("pickles/face-labels.pickle", 'wb') as f:
 	pickle.dump(label_ids, f)
 
 recognizer.train(x_train, np.array(y_labels))
-recognizer.write("recognizers/face-trainner.yml")
+recognizer.save("recognizers/face-trainner.yml")

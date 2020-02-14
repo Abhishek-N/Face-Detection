@@ -10,12 +10,15 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("./recognizers/face-trainner.yml")
 
-labels = {"person_name": 1}
-with open("pickles/face-labels.pickle", 'rb') as f:
-	og_labels = pickle.load(f)
-	labels = {v:k for k,v in og_labels.items()}
+try:
+	labels = {"person_name": 1}
+	with open("pickles/face-labels.pickle", 'rb') as f:
+		og_labels = pickle.load(f)
+		labels = {v:k for k,v in og_labels.items()}
+except EOFError:
+	data = labels
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 while(True):
     # Capture frame-by-frame
@@ -29,7 +32,7 @@ while(True):
 
     	# recognize? deep learned model predict keras tensorflow pytorch scikit learn
     	id_, conf = recognizer.predict(roi_gray)
-    	if conf>=4 and conf <= 85:
+    	if conf>=45 and conf <= 85:
     		#print(5: #id_)
     		#print(labels[id_])
     		font = cv2.FONT_HERSHEY_SIMPLEX
@@ -38,7 +41,7 @@ while(True):
     		stroke = 2
     		cv2.putText(frame, name, (x,y), font, 1, color, stroke, cv2.LINE_AA)
 
-    	img_item = "7.png"
+    	img_item = "abhi.jpg"
     	cv2.imwrite(img_item, roi_color)
 
     	color = (255, 0, 0) #BGR 0-255 
@@ -53,6 +56,7 @@ while(True):
     cv2.imshow('frame',frame)
     if cv2.waitKey(20) & 0xFF == ord('q'):
         break
+
 
 # When everything done, release the capture
 cap.release()
